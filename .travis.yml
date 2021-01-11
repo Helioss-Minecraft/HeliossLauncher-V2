@@ -60,10 +60,10 @@ deploy:
   edge: true
   api_key: $GH_TOKEN
   file:
-    - dist/Helioss-Launcher-setup-2.4.0-release.exe
-    - dist/Helioss-Launcher-setup-2.4.0-release.AppImage
-    - dist/Helioss-Launcher-setup-2.4.0-release.dmg
-    - dist/Helioss-Launcher-setup-2.4.0-release.exe.blockmap
+    - dist/Helioss-Launcher-setup-2.0.0-release.exe
+    - dist/Helioss-Launcher-setup-2.0.0-release.AppImage
+    - dist/Helioss-Launcher-setup-2.0.0-release.dmg
+    - dist/Helioss-Launcher-setup-2.0.0-release.exe.blockmap
     - dist/latest-mac.yml
     - dist/latest-linux.yml
     - dist/latest.yml
