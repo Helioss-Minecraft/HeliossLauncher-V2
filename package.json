@@ -5,9 +5,9 @@
   "description": "Modded Minecraft Launcher",
   "author": "Gamer4life1 (https://github.com/gamer4life1/)",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/Helioss-Minecraft/HeliossLauncher-",
+  "homepage": "https://github.com/Helioss-Minecraft/HeliossLauncher-V2",
   "bugs": {
-    "url": "https://github.com/dscalzi/HeliosLauncher/issues"
+    "url": "https://github.com/Helioss-Minecraft/HeliossLauncher-V2/issues"
   },
   "private": true,
   "main": "index.js",
@@ -29,6 +29,7 @@
     "async": "^3.2.0",
     "discord-rpc": "^3.1.4",
     "ejs": "^3.1.5",
+    "electron-reload": "^1.5.0",
     "ejs-electron": "^2.1.1",
     "electron-updater": "^4.3.5",
     "fs-extra": "^9.0.1",
@@ -47,6 +48,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dscalzi/HeliosLauncher.git"
+    "url": "git+https://github.com/Helioss-Minecraft/HeliossLauncher-V2.git"
   }
 }

@@ -9,7 +9,19 @@ const semver                        = require('semver')
 const url                           = require('url')
 
 if(isDev) {
+//     require('electron-reload')(__dirname, {
     console.log('Is in dev mode!')
+    //         electron: require('${__dirname}/../../node_modules/electron')
+    try {
+        //     }
+        require('electron-reloader')(module, {
+            // }
+            debug: true,
+            watchRenderer: true
+        })
+    } catch (error) {
+        console.log('Error: ' + error)
+    }
 }
 
 // Setup auto updater.
