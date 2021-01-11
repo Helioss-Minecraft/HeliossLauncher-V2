@@ -36,10 +36,35 @@ script:
     else
       npm run cidarwin
     fi
-
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
 branches:
   except:
     - "/^v\\d+\\.\\d+\\.\\d+$/"
+
+before_deploy:
+  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+  - if ! [[ $TRAVIS_TAG ]]; then
+  -   git config --local user.name "Gamer4life1"
+  -   git config --local user.email "lpuvilla0001@mymail.lausd.net"
+  -   git tag $TRAVIS_TAG
+  - fi
+
+deploy:
+  provider: releases
+  # ⋮
+  edge: true
+  api_key: $GH_TOKEN
+  file:
+    - dist/HeliossLauncher-setup-2.4.0-release.exe
+    - dist/HeliossLauncher-setup-2.4.0-release.AppImage
+    - dist/HeliossLauncher-setup-2.4.0-release.dmg
+    - dist/HeliossLauncher-setup-2.4.0-release.exe.blockmap
+    - dist/latest-mac.yml
+    - dist/latest-linux.yml
+    - dist/latest.yml
+  draft: true
+  overwrite: false
+  on:
+    tags: true
