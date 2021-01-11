@@ -1,11 +1,11 @@
 {
-  "name": "helioslauncher",
+  "name": "heliosslauncher",
   "version": "1.8.0",
-  "productName": "Helios Launcher",
+  "productName": "Helioss Launcher",
   "description": "Modded Minecraft Launcher",
-  "author": "Daniel Scalzi (https://github.com/dscalzi/)",
+  "author": "Gamer4life1 (https://github.com/gamer4life1/)",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/dscalzi/HeliosLauncher",
+  "homepage": "https://github.com/Helioss-Minecraft/HeliossLauncher-",
   "bugs": {
     "url": "https://github.com/dscalzi/HeliosLauncher/issues"
   },
