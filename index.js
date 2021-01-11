@@ -8,6 +8,10 @@ const path                          = require('path')
 const semver                        = require('semver')
 const url                           = require('url')
 
+if(isDev) {
+    console.log('Is in dev mode!')
+}
+
 // Setup auto updater.
 function initAutoUpdater(event, data) {
 
