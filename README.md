@@ -58,12 +58,13 @@ For help regarding this version (ModRealms' fork), contact the staff on the disc
 This project is forked from HeliosLauncher, a project by dscalzi for the server WesterosCraft. Please visit and support their project at the links below!
 
 * [Project Link][original]
-* [Original Project Wiki][https://github.com/dscalzi/HeliosLauncher/wiki]
+* [Original Project Wiki][wiki]
 * [Aventium Softworks Discord][discord2]
 
 [discord]: https://discord.gg/rPwhHpMfqq 'Helioss Discord'
 [discord2]: https://discord.gg/zNWUXdt 'Original Project Discord'
 [original]: https://github.com/dscalzi/HeliosLauncher 'Original Project GitHub'
+[wiki]: https://github.com/dscalzi/HeliosLauncher/wiki 'Original Project Wiki'
 
 ## Development
 
