@@ -12,11 +12,14 @@ const SHADER_REGEX = /^(.+)\.zip$/
 const SHADER_OPTION = /shaderPack=(.+)/
 const SHADER_DIR = 'shaderpacks'
 const SHADER_CONFIG = 'optionsshaders.txt'
+const OPTIONS_CONFIG = 'options.txt'
+const RESOURCEPACK_OPTION = /resourcePacks:(.+)/
+const RESOURCEPACK_DIR = 'resourcepacks'
 
 /**
  * Validate that the given directory exists. If not, it is
  * created.
- * 
+ *
  * @param {string} modsDir The path to the mods directory.
  */
 exports.validateDir = function(dir) {
@@ -26,10 +29,10 @@ exports.validateDir = function(dir) {
 /**
  * Scan for drop-in mods in both the mods folder and version
  * safe mods folder.
- * 
+ *
  * @param {string} modsDir The path to the mods directory.
  * @param {string} version The minecraft version of the server configuration.
- * 
+ *
  * @returns {{fullName: string, name: string, ext: string, disabled: boolean}[]}
  * An array of objects storing metadata about each discovered mod.
  */
@@ -40,7 +43,7 @@ exports.scanForDropinMods = function(modsDir, version) {
         let verCandidates = []
         const versionDir = path.join(modsDir, version)
         if(fs.existsSync(versionDir)){
-            verCandidates = fs.readdirSync(versionDir)
+            // verCandidates = fs.readdirSync(versionDir)
         }
         for(let file of modCandidates){
             const match = MOD_REGEX.exec(file)
@@ -70,7 +73,7 @@ exports.scanForDropinMods = function(modsDir, version) {
 
 /**
  * Add dropin mods.
- * 
+ *
  * @param {FileList} files The files to add.
  * @param {string} modsDir The path to the mods directory.
  */
@@ -88,10 +91,10 @@ exports.addDropinMods = function(files, modsdir) {
 
 /**
  * Delete a drop-in mod from the file system.
- * 
+ *
  * @param {string} modsDir The path to the mods directory.
  * @param {string} fullName The fullName of the discovered mod to delete.
- * 
+ *
  * @returns {boolean} True if the mod was deleted, otherwise false.
  */
 exports.deleteDropinMod = function(modsDir, fullName){
@@ -103,13 +106,13 @@ exports.deleteDropinMod = function(modsDir, fullName){
 }
 
 /**
- * Toggle a discovered mod on or off. This is achieved by either 
+ * Toggle a discovered mod on or off. This is achieved by either
  * adding or disabling the .disabled extension to the local file.
- * 
+ *
  * @param {string} modsDir The path to the mods directory.
  * @param {string} fullName The fullName of the discovered mod to toggle.
  * @param {boolean} enable Whether to toggle on or off the mod.
- * 
+ *
  * @returns {Promise.<void>} A promise which resolves when the mod has
  * been toggled. If an IO error occurs the promise will be rejected.
  */
@@ -130,7 +133,7 @@ exports.toggleDropinMod = function(modsDir, fullName, enable){
 
 /**
  * Check if a drop-in mod is enabled.
- * 
+ *
  * @param {string} fullName The fullName of the discovered mod to toggle.
  * @returns {boolean} True if the mod is enabled, otherwise false.
  */
@@ -140,9 +143,9 @@ exports.isDropinModEnabled = function(fullName){
 
 /**
  * Scan for shaderpacks inside the shaderpacks folder.
- * 
+ *
  * @param {string} instanceDir The path to the server instance directory.
- * 
+ *
  * @returns {{fullName: string, name: string}[]}
  * An array of objects storing metadata about each discovered shaderpack.
  */
@@ -170,9 +173,9 @@ exports.scanForShaderpacks = function(instanceDir){
 /**
  * Read the optionsshaders.txt file to locate the current
  * enabled pack. If the file does not exist, OFF is returned.
- * 
+ *
  * @param {string} instanceDir The path to the server instance directory.
- * 
+ *
  * @returns {string} The file name of the enabled shaderpack.
  */
 exports.getEnabledShaderpack = function(instanceDir){
@@ -193,7 +196,7 @@ exports.getEnabledShaderpack = function(instanceDir){
 
 /**
  * Set the enabled shaderpack.
- * 
+ *
  * @param {string} instanceDir The path to the server instance directory.
  * @param {string} pack the file name of the shaderpack.
  */
@@ -213,13 +216,108 @@ exports.setEnabledShaderpack = function(instanceDir, pack){
 
 /**
  * Add shaderpacks.
- * 
+ *
  * @param {FileList} files The files to add.
  * @param {string} instanceDir The path to the server instance directory.
  */
 exports.addShaderpacks = function(files, instanceDir) {
 
     const p = path.join(instanceDir, SHADER_DIR)
+
+    exports.validateDir(p)
+
+    for(let f of files) {
+        if(SHADER_REGEX.exec(f.name) != null) {
+            fs.moveSync(f.path, path.join(p, f.name))
+        }
+    }
+
+}
+
+/**
+ * Scan for resource packs inside the Resource Pack folder.
+ *
+ * @param {string} instanceDir The path to the server instance directory.
+ *
+ * @returns {{fullName: string, name: string}[]}
+ * An array of objects storing metadata about each discovered Resource Pack.
+ */
+exports.scanForResourcePacks = function(instanceDir){
+    const resourcePackDir = path.join(instanceDir, RESOURCEPACK_DIR)
+    const packsDiscovered = [{
+        fullName: 'OFF',
+        name: 'Off (Default)'
+    }]
+    if(fs.existsSync(resourcePackDir)){
+        let modCandidates = fs.readdirSync(resourcePackDir)
+        for(let file of modCandidates){
+            console.log(file)
+            const match = SHADER_REGEX.exec(file)
+            if(match != null){
+                packsDiscovered.push({
+                    fullName: match[0],
+                    name: match[1]
+                })
+            }
+        }
+    }
+    return packsDiscovered
+}
+
+/**
+ * Read the options.txt file to locate the current
+ * enabled pack. If the file does not exist, OFF is returned.
+ *
+ * @param {string} instanceDir The path to the server instance directory.
+ *
+ * @returns {string} The file name of the enabled Resource Pack.
+ */
+exports.getEnabledResourcePack = function(instanceDir){
+    exports.validateDir(instanceDir)
+
+    const options = path.join(instanceDir, OPTIONS_CONFIG)
+    if(fs.existsSync(options)){
+        const buf = fs.readFileSync(options, {encoding: 'utf-8'})
+        const match = RESOURCEPACK_OPTION.exec(buf)
+        if(match != null){
+            return match[1]
+        } else {
+            console.warn('WARNING: Resource Pack regex failed.')
+        }
+    }
+    return 'OFF'
+}
+
+/**
+ * Set the enabled Resource Pack.
+ *
+ * @param {string} instanceDir The path to the server instance directory.
+ * @param {string} pack the file name of the Resource Pack.
+ */
+exports.setEnabledResourcePack = function(instanceDir, pack){
+    exports.validateDir(instanceDir)
+
+    const options = path.join(instanceDir, OPTIONS_CONFIG)
+    let buf
+    if(fs.existsSync(options)){
+        buf = fs.readFileSync(options, {encoding: 'utf-8'})
+        buf = buf.replace(RESOURCEPACK_OPTION, `resourcePacks:["${pack}"]`)
+    } else {
+        buf = `resourcePacks:["${pack}"]`
+    }
+    console.log(buf)
+    fs.writeFileSync(options, buf, {encoding: 'utf-8'})
+}
+
+/**
+ * Add Resource Packs.
+ *
+ * @param {FileList} files The files to add.
+ * @param {string} instanceDir The path to the server instance directory.
+ */
+exports.addResourcePacks = function(files, instanceDir) {
+
+    const p = path.join(instanceDir, RESOURCEPACK_DIR)
 
     exports.validateDir(p)
 

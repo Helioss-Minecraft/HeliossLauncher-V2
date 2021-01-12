@@ -42,10 +42,25 @@ document.addEventListener('click', closeSettingsSelect)
 
 bindSettingsSelect()
 
+function bindFolderOpeners(){
+    for(let ele of document.getElementsByClassName('settingsFolderOpenButton')){
+        ele.onclick = async e => {
+            const pathId = ele.getAttribute('pathId')
+            if(pathId){
+                if(pathId === 'DataDirectory'){
+                    shell.openPath(ConfigManager.getDataDirectory())
+                }
+            }
+
+        }
+    }
+}
+
+bindFolderOpeners()
 
 function bindFileSelectors(){
     for(let ele of document.getElementsByClassName('settingsFileSelButton')){
-        
+
         ele.onclick = async e => {
             const isJavaExecSel = ele.id === 'settingsJavaExecSel'
             const directoryDialog = ele.hasAttribute('dialogDirectory') && ele.getAttribute('dialogDirectory') == 'true'
@@ -85,12 +100,12 @@ bindFileSelectors()
  */
 
 /**
-  * Bind value validators to the settings UI elements. These will
-  * validate against the criteria defined in the ConfigManager (if
-  * and). If the value is invalid, the UI will reflect this and saving
-  * will be disabled until the value is corrected. This is an automated
-  * process. More complex UI may need to be bound separately.
-  */
+ * Bind value validators to the settings UI elements. These will
+ * validate against the criteria defined in the ConfigManager (if
+ * and). If the value is invalid, the UI will reflect this and saving
+ * will be disabled until the value is corrected. This is an automated
+ * process. More complex UI may need to be bound separately.
+ */
 function initSettingsValidators(){
     const sEls = document.getElementById('settingsContainer').querySelectorAll('[cValue]')
     Array.from(sEls).map((v, index, arr) => {
@@ -220,7 +235,7 @@ let selectedSettingsTab = 'settingsTabAccount'
 /**
  * Modify the settings container UI when the scroll threshold reaches
  * a certain poin.
- * 
+ *
  * @param {UIEvent} e The scroll event.
  */
 function settingsTabScrollListener(e){
@@ -247,7 +262,7 @@ function setupSettingsTabs(){
 /**
  * Settings nav item onclick lisener. Function is exposed so that
  * other UI elements can quickly toggle to a certain tab from other views.
- * 
+ *
  * @param {Element} ele The nav item which has been clicked.
  * @param {boolean} fade Optional. True to fade transition.
  */
@@ -269,9 +284,9 @@ function settingsNavItemListener(ele, fade = true){
     document.getElementById(selectedSettingsTab).onscroll = settingsTabScrollListener
 
     if(fade){
-        $(`#${prevTab}`).fadeOut(250, () => {
+        $(`#${prevTab}`).fadeOut(150, () => {
             $(`#${selectedSettingsTab}`).fadeIn({
-                duration: 250,
+                duration: 150,
                 start: () => {
                     settingsTabScrollListener({
                         target: document.getElementById(selectedSettingsTab)
@@ -297,7 +312,7 @@ const settingsNavDone = document.getElementById('settingsNavDone')
 
 /**
  * Set if the settings save (done) button is disabled.
- * 
+ *
  * @param {boolean} v True to disable, false to enable.
  */
 function settingsSaveDisabled(v){
@@ -311,7 +326,17 @@ settingsNavDone.onclick = () => {
     ConfigManager.save()
     saveDropinModConfiguration()
     saveShaderpackSettings()
+    saveResourcePackSettings()
     switchView(getCurrentView(), VIEWS.landing)
+    if(hasRPC){
+        if(ConfigManager.getSelectedServer()){
+            const serv = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer())
+            DiscordWrapper.updateDetails('Ready to Play!')
+            DiscordWrapper.updateState('Server: ' + serv.getName())
+        } else {
+            DiscordWrapper.updateDetails('Landing Screen...')
+        }
+    }
 }
 
 /**
@@ -320,10 +345,14 @@ settingsNavDone.onclick = () => {
 
 // Bind the add account button.
 document.getElementById('settingsAddAccount').onclick = (e) => {
-    switchView(getCurrentView(), VIEWS.login, 500, 500, () => {
+    switchView(getCurrentView(), VIEWS.login, 250, 250, () => {
         loginViewOnCancel = VIEWS.settings
         loginViewOnSuccess = VIEWS.settings
         loginCancelEnabled(true)
+        if(hasRPC){
+            DiscordWrapper.updateDetails('Adding an Account...')
+            DiscordWrapper.clearState()
+        }
     })
 }
 
@@ -410,6 +439,10 @@ function bindAuthAccountLogOut(){
                     processLogOut(val, isLastAccount)
                     toggleOverlay(false)
                     switchView(getCurrentView(), VIEWS.login)
+                    if(hasRPC){
+                        DiscordWrapper.updateDetails('Adding an Account...')
+                        DiscordWrapper.clearState()
+                    }
                 })
                 setDismissHandler(() => {
                     toggleOverlay(false)
@@ -418,14 +451,14 @@ function bindAuthAccountLogOut(){
             } else {
                 processLogOut(val, isLastAccount)
             }
-            
+
         }
     })
 }
 
 /**
  * Process a log out.
- * 
+ *
  * @param {Element} val The log out button element.
  * @param {boolean} isLastAccount If this logout is on the last added account.
  */
@@ -441,7 +474,7 @@ function processLogOut(val, isLastAccount){
             validateSelectedAccount()
         }
     })
-    $(parent).fadeOut(250, () => {
+    $(parent).fadeOut(150, () => {
         parent.remove()
     })
 }
@@ -449,7 +482,7 @@ function processLogOut(val, isLastAccount){
 /**
  * Refreshes the status of the selected account on the auth account
  * elements.
- * 
+ *
  * @param {string} uuid The UUID of the new selected account.
  */
 function refreshAuthAccountSelected(uuid){
@@ -534,8 +567,8 @@ function prepareLauncherTab() {
  */
 
 /**
-  * Disable decimals, negative signs, and scientific notation.
-  */
+ * Disable decimals, negative signs, and scientific notation.
+ */
 document.getElementById('settingsGameWidth').addEventListener('keydown', (e) => {
     if(/^[-.eE]$/.test(e.key)){
         e.preventDefault()
@@ -570,7 +603,7 @@ function resolveModsForUI(){
 
 /**
  * Recursively build the mod UI elements.
- * 
+ *
  * @param {Object[]} mdls An array of modules to parse.
  * @param {boolean} submodules Whether or not we are parsing submodules.
  * @param {Object} servConf The server configuration object for this module level.
@@ -670,7 +703,7 @@ function saveModConfiguration(){
 
 /**
  * Recursively save mod config with submods.
- * 
+ *
  * @param {Object} modConf Mod config object to save.
  */
 function _saveModConfiguration(modConf){
@@ -709,6 +742,7 @@ function resolveDropinModsForUI(){
     let dropinMods = ''
 
     for(dropin of CACHE_DROPIN_MODS){
+
         dropinMods += `<div id="${dropin.fullName}" class="settingsBaseMod settingsDropinMod" ${!dropin.disabled ? 'enabled' : ''}>
                     <div class="settingsModContent">
                         <div class="settingsModMainWrapper">
@@ -872,7 +906,9 @@ document.addEventListener('keydown', (e) => {
         if(e.key === 'F5'){
             reloadDropinMods()
             saveShaderpackSettings()
+            saveResourcePackSettings()
             resolveShaderpacksForUI()
+            resolveResourcePacksForUI()
         }
     }
 })
@@ -889,6 +925,8 @@ function reloadDropinMods(){
 let CACHE_SETTINGS_INSTANCE_DIR
 let CACHE_SHADERPACKS
 let CACHE_SELECTED_SHADERPACK
+let CACHE_RESOURCEPACKS
+let CACHE_SELECTED_RESOURCEPACK
 
 /**
  * Load shaderpack information.
@@ -964,6 +1002,81 @@ function bindShaderpackButton() {
     }
 }
 
+/**
+ * Load resource pack information.
+ */
+function resolveResourcePacksForUI(){
+    const serv = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer())
+    CACHE_SETTINGS_INSTANCE_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.getID())
+    CACHE_RESOURCEPACKS = DropinModUtil.scanForResourcePacks(CACHE_SETTINGS_INSTANCE_DIR)
+    CACHE_SELECTED_RESOURCEPACK = DropinModUtil.getEnabledResourcePack(CACHE_SETTINGS_INSTANCE_DIR)
+
+    setResourcePackOptions(CACHE_RESOURCEPACKS, CACHE_SELECTED_RESOURCEPACK)
+}
+
+function setResourcePackOptions(arr, selected){
+    const cont = document.getElementById('settingsResourcePackOptions')
+    cont.innerHTML = ''
+    for(let opt of arr) {
+        const d = document.createElement('DIV')
+        d.innerHTML = opt.name
+        d.setAttribute('value', opt.fullName)
+        if(opt.fullName === selected) {
+            d.setAttribute('selected', '')
+            document.getElementById('settingsResourcePackSelected').innerHTML = opt.name
+        }
+        d.addEventListener('click', function(e) {
+            this.parentNode.previousElementSibling.innerHTML = this.innerHTML
+            for(let sib of this.parentNode.children){
+                sib.removeAttribute('selected')
+            }
+            this.setAttribute('selected', '')
+            closeSettingsSelect()
+        })
+        cont.appendChild(d)
+    }
+}
+
+function saveResourcePackSettings(){
+    let sel = 'OFF'
+    for(let opt of document.getElementById('settingsResourcePackOptions').childNodes){
+        if(opt.hasAttribute('selected')){
+            sel = opt.getAttribute('value')
+        }
+    }
+    console.log(sel)
+    DropinModUtil.setEnabledResourcePack(CACHE_SETTINGS_INSTANCE_DIR, sel)
+}
+
+function bindResourcePackButton() {
+    const spBtn = document.getElementById('settingsResourcePackButton')
+    spBtn.onclick = () => {
+        const p = path.join(CACHE_SETTINGS_INSTANCE_DIR, 'resourcepacks')
+        DropinModUtil.validateDir(p)
+        shell.openPath(p)
+    }
+    spBtn.ondragenter = e => {
+        e.dataTransfer.dropEffect = 'move'
+        spBtn.setAttribute('drag', '')
+        e.preventDefault()
+    }
+    spBtn.ondragover = e => {
+        e.preventDefault()
+    }
+    spBtn.ondragleave = e => {
+        spBtn.removeAttribute('drag')
+    }
+
+    spBtn.ondrop = e => {
+        spBtn.removeAttribute('drag')
+        e.preventDefault()
+
+        DropinModUtil.addResourcePacks(e.dataTransfer.files, CACHE_SETTINGS_INSTANCE_DIR)
+        saveResourcePackSettings()
+        resolveResourcePacksForUI()
+    }
+}
+
 // Server status bar functions.
 
 /**
@@ -973,23 +1086,12 @@ function loadSelectedServerOnModsTab(){
     const serv = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer())
 
     document.getElementById('settingsSelServContent').innerHTML = `
-        <img class="serverListingImg" src="${serv.getIcon()}"/>
         <div class="serverListingDetails">
+            <img class="serverListingImg" src="${serv.getIcon()}"/>
             <span class="serverListingName">${serv.getName()}</span>
             <span class="serverListingDescription">${serv.getDescription()}</span>
             <div class="serverListingInfo">
-                <div class="serverListingVersion">${serv.getMinecraftVersion()}</div>
                 <div class="serverListingRevision">${serv.getVersion()}</div>
-                ${serv.isMainServer() ? `<div class="serverListingStarWrapper">
-                    <svg id="Layer_1" viewBox="0 0 107.45 104.74" width="20px" height="20px">
-                        <defs>
-                            <style>.cls-1{fill:#fff;}.cls-2{fill:none;stroke:#fff;stroke-miterlimit:10;}</style>
-                        </defs>
-                        <path class="cls-1" d="M100.93,65.54C89,62,68.18,55.65,63.54,52.13c2.7-5.23,18.8-19.2,28-27.55C81.36,31.74,63.74,43.87,58.09,45.3c-2.41-5.37-3.61-26.52-4.37-39-.77,12.46-2,33.64-4.36,39-5.7-1.46-23.3-13.57-33.49-20.72,9.26,8.37,25.39,22.36,28,27.55C39.21,55.68,18.47,62,6.52,65.55c12.32-2,33.63-6.06,39.34-4.9-.16,5.87-8.41,26.16-13.11,37.69,6.1-10.89,16.52-30.16,21-33.9,4.5,3.79,14.93,23.09,21,34C70,86.84,61.73,66.48,61.59,60.65,67.36,59.49,88.64,63.52,100.93,65.54Z"/>
-                        <circle class="cls-2" cx="53.73" cy="53.9" r="38"/>
-                    </svg>
-                    <span class="serverListingStarTooltip">Main Server</span>
-                </div>` : ''}
             </div>
         </div>
     `
@@ -1015,9 +1117,9 @@ function saveAllModConfigurations(){
  * server is changed.
  */
 function animateModsTabRefresh(){
-    $('#settingsTabMods').fadeOut(500, () => {
+    $('#settingsTabMods').fadeOut(150, () => {
         prepareModsTab()
-        $('#settingsTabMods').fadeIn(500)
+        $('#settingsTabMods').fadeIn(150)
     })
 }
 
@@ -1028,9 +1130,11 @@ function prepareModsTab(first){
     resolveModsForUI()
     resolveDropinModsForUI()
     resolveShaderpacksForUI()
+    resolveResourcePacksForUI()
     bindDropinModsRemoveButton()
     bindDropinModFileSystemButton()
     bindShaderpackButton()
+    bindResourcePackButton()
     bindModsToggleSwitch()
     loadSelectedServerOnModsTab()
 }
@@ -1071,9 +1175,9 @@ settingsMinRAMRange.onchange = (e) => {
     const max = (os.totalmem()-1000000000)/1000000000
 
     // Change range bar color based on the selected value.
-    if(sMinV >= max/2){
+    if(sMinV >= max/1.25){
         bar.style.background = '#e86060'
-    } else if(sMinV >= max/4) {
+    } else if(sMinV >= max/2) {
         bar.style.background = '#e8e18b'
     } else {
         bar.style.background = null
@@ -1103,9 +1207,9 @@ settingsMaxRAMRange.onchange = (e) => {
     const max = (os.totalmem()-1000000000)/1000000000
 
     // Change range bar color based on the selected value.
-    if(sMaxV >= max/2){
+    if(sMaxV >= max/1.25){
         bar.style.background = '#e86060'
-    } else if(sMaxV >= max/4) {
+    } else if(sMaxV >= max/2) {
         bar.style.background = '#e8e18b'
     } else {
         bar.style.background = null
@@ -1123,8 +1227,8 @@ settingsMaxRAMRange.onchange = (e) => {
 
 /**
  * Calculate common values for a ranged slider.
- * 
- * @param {Element} v The range slider to calculate against. 
+ *
+ * @param {Element} v The range slider to calculate against.
  * @returns {Object} An object with meta values for the provided ranged slider.
  */
 function calculateRangeSliderMeta(v){
@@ -1168,7 +1272,7 @@ function bindRangeSlider(){
 
                 // Distance from the beginning of the bar in pixels.
                 const diff = e.pageX - v.offsetLeft - track.offsetWidth/2
-                
+
                 // Don't move the track off the bar.
                 if(diff >= 0 && diff <= v.offsetWidth-track.offsetWidth/2){
 
@@ -1184,12 +1288,12 @@ function bindRangeSlider(){
                 }
             }
         }
-    }) 
+    })
 }
 
 /**
  * Update a ranged slider's value and position.
- * 
+ *
  * @param {Element} element The ranged slider to update.
  * @param {string | number} value The new value for the ranged slider.
  * @param {number} notch The notch that the slider should now be at.
@@ -1198,7 +1302,7 @@ function updateRangedSlider(element, value, notch){
     const oldVal = element.getAttribute('value')
     const bar = element.getElementsByClassName('rangeSliderBar')[0]
     const track = element.getElementsByClassName('rangeSliderTrack')[0]
-    
+
     element.setAttribute('value', value)
 
     if(notch < 0){
@@ -1235,7 +1339,7 @@ function populateMemoryStatus(){
 /**
  * Validate the provided executable path and display the data on
  * the UI.
- * 
+ *
  * @param {string} execPath The executable path to populate against.
  */
 function populateJavaExecDetails(execPath){
@@ -1279,19 +1383,22 @@ document.getElementById('settingsAboutDevToolsButton').onclick = (e) => {
 
 /**
  * Return whether or not the provided version is a prerelease.
- * 
+ *
  * @param {string} version The semver version to test.
  * @returns {boolean} True if the version is a prerelease, otherwise false.
  */
 function isPrerelease(version){
     const preRelComp = semver.prerelease(version)
+    if(preRelComp != null && preRelComp.includes('release')) {
+        return false
+    }
     return preRelComp != null && preRelComp.length > 0
 }
 
 /**
  * Utility method to display version information on the
  * About and Update settings tabs.
- * 
+ *
  * @param {string} version The semver version to display.
  * @param {Element} valueElement The value element.
  * @param {Element} titleElement The title element.
@@ -1323,11 +1430,11 @@ function populateAboutVersionInformation(){
  */
 function populateReleaseNotes(){
     $.ajax({
-        url: 'https://github.com/dscalzi/HeliosLauncher/releases.atom',
+        url: 'https://github.com/Helioss-Minecraft/HeliossLauncher-V2/releases.atom',
         success: (data) => {
             const version = 'v' + remote.app.getVersion()
             const entries = $(data).find('entry')
-            
+
             for(let i=0; i<entries.length; i++){
                 const entry = $(entries[i])
                 let id = entry.find('id').text()
@@ -1371,7 +1478,7 @@ const settingsUpdateActionButton   = document.getElementById('settingsUpdateActi
 
 /**
  * Update the properties of the update action button.
- * 
+ *
  * @param {string} text The new button text.
  * @param {boolean} disabled Optional. Disable or enable the button
  * @param {function} handler Optional. New button event handler.
@@ -1386,7 +1493,7 @@ function settingsUpdateButtonStatus(text, disabled = false, handler = null){
 
 /**
  * Populate the update tab with relevant information.
- * 
+ *
  * @param {Object} data The update data.
  */
 function populateSettingsUpdateInformation(data){
@@ -1396,13 +1503,13 @@ function populateSettingsUpdateInformation(data){
         settingsUpdateChangelogTitle.innerHTML = data.releaseName
         settingsUpdateChangelogText.innerHTML = data.releaseNotes
         populateVersionInformation(data.version, settingsUpdateVersionValue, settingsUpdateVersionTitle, settingsUpdateVersionCheck)
-        
+
         if(process.platform === 'darwin'){
             settingsUpdateButtonStatus('Download from GitHub<span style="font-size: 10px;color: gray;text-shadow: none !important;">Close the launcher and run the dmg to update.</span>', false, () => {
                 shell.openExternal(data.darwindownload)
             })
         } else {
-            settingsUpdateButtonStatus('Downloading..', true)
+            settingsUpdateButtonStatus('Downloading...', true)
         }
     } else {
         settingsUpdateTitle.innerHTML = 'You Are Running the Latest Version'
@@ -1419,7 +1526,7 @@ function populateSettingsUpdateInformation(data){
 
 /**
  * Prepare update tab for display.
- * 
+ *
  * @param {Object} data The update data.
  */
 function prepareUpdateTab(data = null){
@@ -1431,10 +1538,10 @@ function prepareUpdateTab(data = null){
  */
 
 /**
-  * Prepare the entire settings UI.
-  * 
-  * @param {boolean} first Whether or not it is the first load.
-  */
+ * Prepare the entire settings UI.
+ *
+ * @param {boolean} first Whether or not it is the first load.
+ */
 function prepareSettings(first = false) {
     if(first){
         setupSettingsTabs()

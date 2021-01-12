@@ -1095,7 +1095,7 @@ function loadNews(){
                         // comments = comments + ' Comment' + (comments === '1' ? '' : 's')
 
                         // Fix relative links in content.
-                        let content = el.find('description').text()
+                        let content = el.find('content\\:encoded').text()
                         let regex = /src="(?!http:\/\/|https:\/\/)(.+?)"/g
                         let matches
                         while((matches = regex.exec(content))){
@@ -1131,5 +1131,4 @@ function loadNews(){
             })
         })
     })
->>>>>>> 0e68028 (Disabled RSS comments being shown, and reworked formatting for announcements from Discord.)
 }
