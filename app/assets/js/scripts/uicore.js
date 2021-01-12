@@ -26,9 +26,8 @@ window.eval = global.eval = function () {
 
 // Display warning when devtools window is opened.
 remote.getCurrentWebContents().on('devtools-opened', () => {
-    console.log('%cThe console is dark and full of terrors.', 'color: white; -webkit-text-stroke: 4px #a02d2a; font-size: 60px; font-weight: bold')
-    console.log('%cIf you\'ve been told to paste something here, you\'re being scammed.', 'font-size: 16px')
-    console.log('%cUnless you know exactly what you\'re doing, close this window.', 'font-size: 16px')
+    console.log('%cIf you\'ve been told to paste something here, you\'re being scammed.', 'font-size: 5px')
+    console.log('%cUnless you know exactly what you\'re doing, close this window.', 'font-size: 5px')
 })
 
 // Disable zoom, needed for darwin.
@@ -46,12 +45,12 @@ if(!isDev){
                 break
             case 'update-available':
                 loggerAutoUpdaterSuccess.log('New update available', info.version)
-                
+
                 if(process.platform === 'darwin'){
-                    info.darwindownload = `https://github.com/Helioss-Minecraft/HeliossLauncher-V2/releases/download/v${info.version}/helioslauncher-setup-${info.version}.dmg`
+                    info.darwindownload = `https://github.com/Helioss-Minecraft/HeliossLauncher-V2/releases/download/v${info.version}/Helioss-Launcher-setup-${info.version}.dmg`
                     showUpdateUI(info)
                 }
-                
+
                 populateSettingsUpdateInformation(info)
                 break
             case 'update-downloaded':
@@ -97,7 +96,7 @@ if(!isDev){
  * allowPrerelease. If we are running a prerelease version, then
  * this will always be set to true, regardless of the current value
  * of val.
- * 
+ *
  * @param {boolean} val The new allow prerelease value.
  */
 function changeAllowPrerelease(val){
@@ -121,7 +120,7 @@ function showUpdateUI(info){
             toggleOverlay(false)
         })
         toggleOverlay(true, true)*/
-        switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
+        switchView(getCurrentView(), VIEWS.settings, 250, 250, () => {
             settingsNavItemListener(document.getElementById('settingsNavUpdate'), false)
         })
     }
@@ -140,7 +139,8 @@ document.addEventListener('readystatechange', function () {
         Array.from(document.getElementsByClassName('fCb')).map((val) => {
             val.addEventListener('click', e => {
                 const window = remote.getCurrentWindow()
-                window.close()
+                //window.close()
+                window.destroy()
             })
         })
 
@@ -187,7 +187,7 @@ document.addEventListener('readystatechange', function () {
         document.getElementById('launch_progress').style.width = 170.8
         document.getElementById('launch_details_right').style.maxWidth = 170.8
         document.getElementById('launch_progress_label').style.width = 53.21
-        
+
     }
 
 }, false)
@@ -203,7 +203,7 @@ $(document).on('click', 'a[href^="http"]', function(event) {
 /**
  * Opens DevTools window if you hold (ctrl + shift + i).
  * This will crash the program if you are using multiple
- * DevTools, for example the chrome debugger in VS Code. 
+ * DevTools, for example the chrome debugger in VS Code.
  */
 document.addEventListener('keydown', function (e) {
     if((e.key === 'I' || e.key === 'i') && e.ctrlKey && e.shiftKey){

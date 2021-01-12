@@ -4,6 +4,8 @@ const request = require('request')
 
 const ConfigManager = require('./configmanager')
 const logger        = require('./loggerutil')('%c[DistroManager]', 'color: #a02d2a; font-weight: bold')
+// eslint-disable-next-line no-unused-vars
+const constants = require('../../config/constants')
 
 /**
  * Represents the download information
@@ -631,6 +633,6 @@ exports.isDevMode = function(){
 /**
  * @returns {DistroIndex}
  */
-exports.getDistribution = function(){
+exports.getDistribution = function() {
     return data
 }
