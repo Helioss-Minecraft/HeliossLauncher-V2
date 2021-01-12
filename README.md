@@ -1,61 +1,33 @@
-<p align="center"><img src="./app/assets/images/SealCircle.png" width="150px" height="150px" alt="aventium softworks"></p>
+<p align="center"><img src="./app/assets/images/SealCircle.png" width="150px" height="150px" alt="modrealms logo"></p>
 
-<h1 align="center">Helios Launcher</h1>
+<h1 align="center">Helioss Launcher</h1>
 
-<em><h5 align="center">(formerly Electron Launcher)</h5></em>
+<em><h5 align="center"><a href="https://github.com/dscalzi/HeliosLauncher">Modified from HeliosLauncher</a></h5></em>
 
-[<p align="center"><img src="https://img.shields.io/travis/dscalzi/HeliosLauncher.svg?style=for-the-badge" alt="travis">](https://travis-ci.org/dscalzi/HeliosLauncher) [<img src="https://img.shields.io/github/downloads/dscalzi/HeliosLauncher/total.svg?style=for-the-badge" alt="downloads">](https://github.com/dscalzi/HeliosLauncher/releases) <img src="https://forthebadge.com/images/badges/winter-is-coming.svg"  height="28px" alt="stark"></p>
+<!-- [<p align="center"><img src="https://img.shields.io/travis/dscalzi/HeliosLauncher.svg?style=for-the-badge" alt="travis">](https://travis-ci.org/dscalzi/HeliosLauncher) [<img src="https://img.shields.io/github/downloads/dscalzi/HeliosLauncher/total.svg?style=for-the-badge" alt="downloads">](https://github.com/dscalzi/HeliosLauncher/releases) <img src="https://forthebadge.com/images/badges/winter-is-coming.svg"  height="28px" alt="stark"></p> -->
 
-<p align="center">Join modded servers without worrying about installing Java, Forge, or other mods. We'll handle that for you.</p>
-
-![Screenshot 1](https://i.imgur.com/6o7SmH6.png)
-![Screenshot 2](https://i.imgur.com/x3B34n1.png)
-
-## Features
-
-* 🔒 Full account management.
-  * Add multiple accounts and easily switch between them.
-  * Credentials are never stored and transmitted directly to Mojang.
-* 📂 Efficient asset management.
-  * Receive client updates as soon as we release them.
-  * Files are validated before launch. Corrupt or incorrect files will be redownloaded.
-* ☕ **Automatic Java validation.**
-  * If you have an incompatible version of Java installed, we'll install the right one *for you*.
-  * You do not need to have Java installed to run the launcher.
-* 📰 News feed natively built into the launcher.
-* ⚙️ Intuitive settings management, including a Java control panel.
-* Supports all of our servers.
-  * Switch between server configurations with ease.
-  * View the player count of the selected server.
-* Automatic updates. That's right, the launcher updates itself.
-*  View the status of Mojang's services.
-
-This is not an exhaustive list. Download and install the launcher to gauge all it can do!
-
-#### Need Help? [Check the wiki.][wiki]
-
-#### Like the project? Leave a ⭐ star on the repository!
+<p align="center">Join Helioss' servers easily and keep up to date with our packs and fixes!</p>
 
 ## Downloads
 
-You can download from [GitHub Releases](https://github.com/dscalzi/HeliosLauncher/releases)
+You can download from [GitHub Releases](https://github.com/Helioss-Minecraft/HeliossLauncher-V2/releases)
+
+## Development (Helioss fork)
+
+All Helioss-specific changes (UI, assets, default configuration, etc..) will be in the master branch.
+
 
 #### Latest Release
-
-[![](https://img.shields.io/github/release/dscalzi/HeliosLauncher.svg?style=flat-square)](https://github.com/dscalzi/HeliosLauncher/releases/latest)
-
-#### Latest Pre-Release
-[![](https://img.shields.io/github/release/dscalzi/HeliosLauncher/all.svg?style=flat-square)](https://github.com/dscalzi/HeliosLauncher/releases)
-
+Coming Soon!
 **Supported Platforms**
 
-If you download from the [Releases](https://github.com/dscalzi/HeliosLauncher/releases) tab, select the installer for your system.
+If you download from the [Releases](https://github.com/Helioss-Minecraft/HeliossLauncher-V2/releases) tab, select the installer for your system.
 
 | Platform | File |
 | -------- | ---- |
-| Windows x64 | `helioslauncher-setup-VERSION.exe` |
-| macOS | `helioslauncher-VERSION.dmg` |
-| Linux x64 | `helioslauncher-VERSION-x86_64.AppImage` |
+| Windows x64 | `Helioss-Launcher-setup-VERSION-release.exe` |
+| macOS | `Helioss-Launcher-setup-VERSION.dmg` |
+| Linux x64 | `Helioss-Launcher-setup-VERSION.AppImage` |
 
 ## Console
 
@@ -73,6 +45,25 @@ If you want to export the console output, simply right click anywhere on the con
 
 ![console example](https://i.imgur.com/T5e73jP.png)
 
+
+## Help
+
+For help regarding this version (ModRealms' fork), contact the staff on the discord server below:
+
+[![discord](https://discordapp.com/api/guilds/602313280702382106/embed.png?style=banner2)][discord]
+
+
+## Original Authors
+
+This project is forked from HeliosLauncher, a project by dscalzi for the server WesterosCraft. Please visit and support their project at the links below!
+
+* [Project Link][original]
+* [Original Project Wiki][https://github.com/dscalzi/HeliosLauncher/wiki]
+* [Aventium Softworks Discord][discord2]
+
+[discord]: https://discord.gg/rPwhHpMfqq 'Helioss Discord'
+[discord2]: https://discord.gg/zNWUXdt 'Original Project Discord'
+[original]: https://github.com/dscalzi/HeliosLauncher 'Original Project GitHub'
 
 ## Development
 
