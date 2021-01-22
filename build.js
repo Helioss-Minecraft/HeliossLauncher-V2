@@ -47,7 +47,7 @@ builder.build({
         linux: {
             target: 'AppImage',
             maintainer: 'Gamer4life1',
-            vendor: 'Gamer4life1',
+            vendor: 'Helioss',
             synopsis: 'Modded Minecraft Launcher',
             description: 'Custom launcher which allows users to join our modded servers. All mods, configurations, and updates are handled automatically.',
             category: 'Game'
