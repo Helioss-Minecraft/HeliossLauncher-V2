@@ -273,7 +273,7 @@ function populateServerListings(){
         htmlString += `<button class="serverListing" servid="${serv.getID()}" ${serv.getID() === giaSel ? 'selected' : ''}>
             <img class="serverListingImg" src="${serv.getIcon()}"/>
             <div class="serverListingDetails">
-                <span class="serverListingName">${serv.getName()}</span>
+                <span class="serverListingPickerName">${serv.getName()}</span>
                 <span class="serverListingDescription">${serv.getDescription()}</span>
                 <div class="serverListingInfo">
                     <div class="serverListingVersion">${serv.getMinecraftVersion()}</div>

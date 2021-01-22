@@ -1518,9 +1518,11 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Mod sub-container header text. */
 .settingsModsHeader {
-    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 30px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     margin-bottom: 10px;
+    /* outline: 2px solid #CCC; */
 }
 
 /* Mod elements sub-containers. */
@@ -1538,6 +1540,7 @@ input:checked + .toggleSwitchSlider:before {
     background: rgba(0, 0, 0, 0.25);
     border-radius: 3px;
     color: white;
+    padding-top: 100px;
 }
 
 /* Mod elements. */
@@ -3496,8 +3499,9 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Content container for a server listing. */
 .serverListing {
-    border: none;
-    padding: 0;
+    /* border: none; */
+    /* padding-bottom: 300; */
+    padding: 10px;
     width: 600px;
     min-height: 75px;
     display: flex;
@@ -3586,18 +3590,26 @@ input:checked + .toggleSwitchSlider:before {
 .serverListingName {
     font-size: 17px;
     font-weight: bold;
+    padding-top: 30px;
+}
+
+.serverListingPickerName {
+    font-size: 17px;
+    font-weight: bold;
 }
 
 /* Description for the server listing. */
 .serverListingDescription {
-    font-size: 12px;
-    line-height: 10px;
-    /*font-weight: bold;*/
+    padding-top: 10px;
+    font-size: 10px;
+    line-height: 14px;
+    /* display: none; */
+    /* font-weight: bold; */
 }
 
 /* Content container for the server listing's information. */
 .serverListingInfo {
-    width: 100%;
+    width: 200px;
     display: flex;
     justify-content: flex-start;
 }
